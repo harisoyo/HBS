@@ -6,6 +6,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
+import com.example.hbs.Enum.Role;
 
 @Entity
 @Data
@@ -19,17 +20,13 @@ public class User {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userId;
+    private Long Id;
     @Column(nullable = false)
     private String userName;
     @Column(nullable = false)
     private String userEmail;
     @Column(nullable = false)
     private String userContact;
-    public enum Role{
-        CUSTOMER,
-        HOTELOWNER
-    }
     @Column(nullable = false)
     private Role userRole;
     @Column(nullable = false,updatable = false)

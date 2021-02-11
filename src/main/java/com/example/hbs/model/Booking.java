@@ -20,7 +20,9 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     @Column(nullable = false,updatable = false)
-    private LocalDate dateOfBooking;
+    private LocalDate checkIn;
+    @Column(nullable = false,updatable = false)
+    private LocalDate checkOut;
     @Column(nullable = false)
     private Integer noOfRooms;
     @Column(nullable = false)
