@@ -18,9 +18,7 @@ public class Booking {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String bookingId;
-    @Column(nullable = false)
-    private String hotelName;
+    private Long Id;
     @Column(nullable = false,updatable = false)
     private Date dateOfBooking;
     @Column(nullable = false)

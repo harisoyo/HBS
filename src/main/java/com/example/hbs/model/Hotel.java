@@ -17,13 +17,11 @@ public class Hotel {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String hotelId;
+    private Long hotelId;
     @Column(nullable = false)
     private String hotelName;
     @Column(nullable = false)
     private String hotelLocation;
-    @Column(nullable = false)
-    private String typeOfRoom;
     @Column(nullable = false)
     private Integer noOfRooms;
     @Column(nullable = false)

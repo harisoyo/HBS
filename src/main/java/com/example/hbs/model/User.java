@@ -19,15 +19,19 @@ public class User {
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String userId;
+    private Long userId;
     @Column(nullable = false)
     private String userName;
     @Column(nullable = false)
     private String userEmail;
     @Column(nullable = false)
     private String userContact;
+    public enum Role{
+        CUSTOMER,
+        HOTELOWNER
+    }
     @Column(nullable = false)
-    private String userRole;
+    private Role userRole;
     @Column(nullable = false,updatable = false)
     @CreationTimestamp
     private Date created_at;
