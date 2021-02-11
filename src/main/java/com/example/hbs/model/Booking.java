@@ -3,7 +3,7 @@ package com.example.hbs.model;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 @Table
@@ -20,7 +20,7 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
     @Column(nullable = false,updatable = false)
-    private Date dateOfBooking;
+    private LocalDate dateOfBooking;
     @Column(nullable = false)
     private Integer noOfRooms;
     @Column(nullable = false)

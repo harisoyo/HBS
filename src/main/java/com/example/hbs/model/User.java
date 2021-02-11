@@ -4,7 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.List;
 
 @Entity
@@ -34,9 +34,9 @@ public class User {
     private Role userRole;
     @Column(nullable = false,updatable = false)
     @CreationTimestamp
-    private Date created_at;
+    private LocalDate created_at;
     @Column(nullable = false)
     @CreationTimestamp
-    private Date update_at;
+    private LocalDate update_at;
 
 }
