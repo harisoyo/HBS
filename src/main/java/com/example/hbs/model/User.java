@@ -5,11 +5,17 @@ import org.hibernate.annotations.CreationTimestamp;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
 @Table(name="my_user_table")
 public class User {
+
+    @OneToMany(mappedBy = "user")
+    private List<Booking> bookings;
+    @OneToMany(mappedBy = "user")
+    private List<Hotel> hotels;
     @Id
     @Column(nullable = false)
     @GeneratedValue(strategy = GenerationType.AUTO)

@@ -3,11 +3,14 @@ package com.example.hbs.model;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table
 @Data
 public class Hotel {
+    @OneToMany(mappedBy = "hotel")
+    private List<Booking> bookings;
     @ManyToOne
     @JoinColumn
     private User user;
