@@ -24,23 +24,19 @@ public class HotelService {
     }
 
     public void deleteHotel(Long id) {
-        String Id = id.toString();
-        User user;
-        if(hotelRepository.findById(Id).isPresent()) {
-            user = hotelRepository.findById(Id).get().getUser();
+        if(hotelRepository.findById(id).isPresent()) {
+            User user = hotelRepository.findById(id).get().getUser();
             if (user.getUserRole().equals(Role.HOTEL_OWNER)) {
-                hotelRepository.deleteById(Id);
+                hotelRepository.deleteById(id);
             }
         }
     }
 
     public void updateHotel(Long id, Hotel hotel) {
-        String Id = id.toString();
-        User user;
-        if(hotelRepository.findById(Id).isPresent()) {
-            user = hotelRepository.findById(Id).get().getUser();
+        if(hotelRepository.findById(id).isPresent()) {
+            User user = hotelRepository.findById(id).get().getUser();
             if (user.getUserRole().equals(Role.HOTEL_OWNER)) {
-                hotelRepository.deleteById(Id);
+                hotelRepository.deleteById(id);
                 hotelRepository.save(hotel);
             }
         }
