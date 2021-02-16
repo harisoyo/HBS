@@ -15,12 +15,12 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Table(name = "bookings")
 public class Booking {
-    @ManyToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, referencedColumnName = "Id", name = "user_id")
     private User user;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, referencedColumnName = "Id", name = "hotel_id")
     private Hotel hotel;
 
     @Id
@@ -28,10 +28,10 @@ public class Booking {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long Id;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate checkIn;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     private LocalDate checkOut;
 
     @Column(nullable = false)
