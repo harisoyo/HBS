@@ -9,11 +9,11 @@ import java.util.List;
 @Data
 @Table(name = "hotels")
 public class Hotel {
-    @OneToMany(mappedBy = "hotel")
+    @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
-    @ManyToOne
-    @JoinColumn(nullable = false)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(nullable = false, referencedColumnName = "Id", name = "user_id")
     private User user;
 
     @Id

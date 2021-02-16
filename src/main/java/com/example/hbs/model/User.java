@@ -12,10 +12,10 @@ import java.util.List;
 @Data
 @Table(name = "users")
 public class User {
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Booking> bookings;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Hotel> hotels;
 
     @Id
@@ -35,7 +35,7 @@ public class User {
     @Column(nullable = false)
     private Role userRole;
 
-    @Column(nullable = false,updatable = false)
+    @Column(nullable = false, updatable = false)
     @CreationTimestamp
     private LocalDate created_at;
 
