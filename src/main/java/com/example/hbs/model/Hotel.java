@@ -1,12 +1,18 @@
 package com.example.hbs.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "hotels")
 public class Hotel {
     @OneToMany(mappedBy = "hotel", cascade = CascadeType.ALL)
