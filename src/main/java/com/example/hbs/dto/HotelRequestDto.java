@@ -8,6 +8,13 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelRequestDto {
+    private Long userId;
+
+    private String hotelName;
+
+    private String hotelLocation;
+
+    private Integer noOfRooms;
 
     private Integer availableRooms;
 

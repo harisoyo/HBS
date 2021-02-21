@@ -19,26 +19,26 @@ public class Hotel {
     private List<Booking> bookings;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, referencedColumnName = "Id", name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "Id")
     private User user;
 
     @Id
-    @Column(nullable = false)
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(nullable = false, name = "id")
     private Long Id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "hotel_name")
     private String hotelName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "hotel_location")
     private String hotelLocation;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "no_of_rooms")
     private Integer noOfRooms;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "available_rooms")
     private Integer availableRooms;
 
-    @Column(nullable = false)
+    @Column(nullable = false, name = "price_of_room")
     private Integer priceOfRoom;
 }
