@@ -16,6 +16,7 @@ public class BookingController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/user/booking")
     public ResponseEntity<BookingResponseDto> addBooking(@RequestBody BookingRequestDto bookingRequestDto) {
+        System.out.println(bookingRequestDto);
         BookingResponseDto bookingResponseDto = bookingService.addBooking(bookingRequestDto);
         if (bookingResponseDto != null)
             return new ResponseEntity<>(bookingResponseDto,HttpStatus.OK);
@@ -24,7 +25,7 @@ public class BookingController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/booking/{id}")
-    public ResponseEntity<BookingResponseDto> deleteBooking(@RequestParam Long id) {
+    public ResponseEntity<BookingResponseDto> deleteBooking(@PathVariable Long id) {
         BookingResponseDto bookingResponseDto = bookingService.deleteBooking(id);
         if (bookingResponseDto != null)
             return new ResponseEntity<>(bookingResponseDto,HttpStatus.OK);
