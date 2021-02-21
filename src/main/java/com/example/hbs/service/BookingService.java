@@ -2,7 +2,6 @@ package com.example.hbs.service;
 
 import com.example.hbs.dto.BookingRequestDto;
 import com.example.hbs.dto.BookingResponseDto;
-import com.example.hbs.enums.Role;
 import com.example.hbs.model.Booking;
 import com.example.hbs.repository.BookingRepository;
 import com.example.hbs.repository.HotelRepository;
@@ -27,11 +26,12 @@ public class BookingService {
 
     public BookingResponseDto addBooking(BookingRequestDto bookingRequestDto) {
         if (userRepository.findById(bookingRequestDto.getUserId()).isPresent() &&
-                userRepository.findById(bookingRequestDto.getUserId()).get().getUserRole().equals(Role.HOTEL_OWNER) &&
                 hotelRepository.findById(bookingRequestDto.getHotelId()).isPresent()) {
             Booking booking = Booking.builder()
                     .user(userRepository.findById(bookingRequestDto.getUserId()).get())
                     .hotel(hotelRepository.findById(bookingRequestDto.getHotelId()).get())
+                    .checkIn(bookingRequestDto.getCheckIn())
+                    .checkOut(bookingRequestDto.getCheckOut())
                     .bookingPrice(bookingRequestDto.getBookingPrice())
                     .noOfRooms(bookingRequestDto.getNoOfRooms())
                     .noOfPeople(bookingRequestDto.getNoOfPeople())
