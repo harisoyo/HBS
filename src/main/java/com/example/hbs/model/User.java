@@ -32,13 +32,13 @@ public class User {
     @Column(nullable = false)
     private String userName;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userEmail;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String userContact;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Role userRole;
 
     @Column(nullable = false, updatable = false)
