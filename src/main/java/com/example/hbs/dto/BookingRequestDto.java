@@ -10,6 +10,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingRequestDto {
+    private Long userId;
+
+    private Long hotelId;
+
     private Integer noOfRooms;
 
     private Integer noOfPeople;
