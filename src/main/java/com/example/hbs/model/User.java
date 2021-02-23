@@ -38,7 +38,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String userContact;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private Role userRole;
 
     @Column(nullable = false, updatable = false)
