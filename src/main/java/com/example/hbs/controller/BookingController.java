@@ -16,7 +16,6 @@ public class BookingController {
 
     @RequestMapping(method = RequestMethod.POST, value = "/user/booking")
     public ResponseEntity<BookingResponseDto> addBooking(@RequestBody BookingRequestDto bookingRequestDto) {
-        System.out.println(bookingRequestDto);
         BookingResponseDto bookingResponseDto = bookingService.addBooking(bookingRequestDto);
         if (bookingResponseDto != null)
             return new ResponseEntity<>(bookingResponseDto,HttpStatus.OK);

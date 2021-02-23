@@ -6,6 +6,9 @@ import com.example.hbs.model.User;
 import com.example.hbs.repository.UserRepository;
 import com.example.hbs.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -30,10 +33,12 @@ public class UserService {
         return userMapper.map(userRepository.save(user));
     }
 
-    public List<UserResponseDto> findAllUser() {
-        List<User> users = userRepository.findAll();
+    public List<UserResponseDto> findAllUser(Integer pageNo, Integer pageSize) {
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<User> users = userRepository.findAll(page);
+        List<User> user = users.getContent();
         List<UserResponseDto> userResponseDtos = new ArrayList<>();
-        for (User currentUser : users) {
+        for (User currentUser : user) {
             userResponseDtos.add(UserResponseDto.builder()
                     .userName(currentUser.getUserName())
                     .userEmail(currentUser.getUserEmail())

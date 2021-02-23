@@ -3,6 +3,7 @@ package com.example.hbs.service;
 import com.example.hbs.dto.HotelRequestDto;
 import com.example.hbs.dto.HotelResponseDto;
 import com.example.hbs.enums.Role;
+import com.example.hbs.enums.SortBy;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.HotelRepository;
@@ -32,24 +33,19 @@ public class HotelService {
     @Autowired
     private HotelListMapper hotelListMapper;
 
-    public List<HotelResponseDto> findAllHotels(int pageNo) {
-        Pageable page = PageRequest.of(pageNo - 1, 20);
+    public List<HotelResponseDto> findAllHotels(Integer pageNo, SortBy sortBy, Integer pageSize) {
+        String sort = "Id";
+        if (sortBy.equals(SortBy.PRICE))
+            sort = "priceOfRoom";
+        if (sortBy.equals(SortBy.ROOM))
+            sort = "noOfRooms";
+        Pageable page;
+        if (sort.equals("Id"))
+            page = PageRequest.of(pageNo - 1, pageSize);
+        else
+            page = PageRequest.of(pageNo - 1, pageSize, Sort.by(sort));
         Page<Hotel> hotels = hotelRepository.findAll(page);
         List<Hotel> hotel = hotels.getContent();
-        return hotelListMapper.map(hotel);
-    }
-
-    public List<HotelResponseDto> findAndSortAllHotelsByPrice(int pageNo) {
-        Pageable page = PageRequest.of(pageNo - 1, 20, Sort.by("priceOfRoom"));
-        Page<Hotel> hotels = hotelRepository.findAll(page);
-        List<Hotel> hotel =hotels.getContent();
-        return hotelListMapper.map(hotel);
-    }
-
-    public List<HotelResponseDto> findAndSortAllHotelsByNoOfRooms(int pageNo) {
-        Pageable page = PageRequest.of(pageNo - 1, 20, Sort.by("noOfRooms"));
-        Page<Hotel> hotels = hotelRepository.findAll(page);
-        List<Hotel> hotel =hotels.getContent();
         return hotelListMapper.map(hotel);
     }
 

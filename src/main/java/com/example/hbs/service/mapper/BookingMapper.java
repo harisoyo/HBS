@@ -10,6 +10,8 @@ public class BookingMapper implements IMapper<Booking, BookingResponseDto> {
     @Override
     public BookingResponseDto map(Booking booking) {
         return BookingResponseDto.builder()
+                .checkIn(booking.getCheckIn())
+                .checkOut(booking.getCheckOut())
                 .bookingPrice(booking.getBookingPrice())
                 .noOfRooms(booking.getNoOfRooms())
                 .noOfPeople(booking.getNoOfPeople())
