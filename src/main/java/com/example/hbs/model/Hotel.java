@@ -19,7 +19,7 @@ public class Hotel {
     private List<Booking> bookings;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "Id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Id
