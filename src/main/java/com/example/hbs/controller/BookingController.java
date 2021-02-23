@@ -13,6 +13,15 @@ public class BookingController {
     @Autowired
     BookingService bookingService;
 
+    @RequestMapping(method = RequestMethod.GET, value = "/user/booking/{bookingId}")
+    public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId) {
+        BookingResponseDto bookingResponseDto = bookingService.viewBooking(bookingId);
+        if (bookingResponseDto != null)
+            return new ResponseDto<>(bookingResponseDto);
+        else
+            return new ResponseDto<>(null);
+    }
+
     @RequestMapping(method = RequestMethod.POST, value = "/user/booking")
     public ResponseDto<BookingResponseDto> addBooking(@RequestBody BookingRequestDto bookingRequestDto) {
         BookingResponseDto bookingResponseDto = bookingService.addBooking(bookingRequestDto);

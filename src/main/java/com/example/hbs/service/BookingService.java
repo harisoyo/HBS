@@ -3,6 +3,7 @@ package com.example.hbs.service;
 import com.example.hbs.dto.BookingRequestDto;
 import com.example.hbs.dto.BookingResponseDto;
 import com.example.hbs.model.Booking;
+import com.example.hbs.model.Hotel;
 import com.example.hbs.repository.BookingRepository;
 import com.example.hbs.repository.HotelRepository;
 import com.example.hbs.repository.UserRepository;
@@ -24,9 +25,23 @@ public class BookingService {
     @Autowired
     BookingMapper bookingMapper;
 
+    public BookingResponseDto viewBooking(Long bookingId) {
+        if (bookingRepository.findById(bookingId).isPresent()) {
+            return bookingMapper.map(bookingRepository.findById(bookingId).get());
+        } else {
+            return null;
+        }
+    }
+
     public BookingResponseDto addBooking(BookingRequestDto bookingRequestDto) {
         if (userRepository.findById(bookingRequestDto.getUserId()).isPresent() &&
                 hotelRepository.findById(bookingRequestDto.getHotelId()).isPresent()) {
+            Hotel hotel = hotelRepository.findById(bookingRequestDto.getHotelId()).get();
+            if (hotel.getAvailableRooms() >= bookingRequestDto.getNoOfRooms()) {
+                hotel.setAvailableRooms(hotel.getAvailableRooms() - bookingRequestDto.getNoOfRooms());
+            } else {
+                return null;
+            }
             Booking booking = Booking.builder()
                     .user(userRepository.findById(bookingRequestDto.getUserId()).get())
                     .hotel(hotelRepository.findById(bookingRequestDto.getHotelId()).get())
@@ -52,4 +67,6 @@ public class BookingService {
             return null;
         }
     }
+
+
 }
