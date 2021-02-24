@@ -20,7 +20,7 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/user")
-    public List<UserResponseDto> viewUser(@RequestParam(defaultValue = "10") Integer pageNo, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
+    public List<UserResponseDto> viewUser(@RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize) {
         return userService.findAllUser(pageNo, pageSize);
     }
 

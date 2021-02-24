@@ -39,12 +39,13 @@ public class BookingService {
             Hotel hotel = hotelRepository.findById(bookingRequestDto.getHotelId()).get();
             if (hotel.getAvailableRooms() >= bookingRequestDto.getNoOfRooms()) {
                 hotel.setAvailableRooms(hotel.getAvailableRooms() - bookingRequestDto.getNoOfRooms());
+                hotelRepository.save(hotel);
             } else {
                 return null;
             }
             Booking booking = Booking.builder()
                     .user(userRepository.findById(bookingRequestDto.getUserId()).get())
-                    .hotel(hotelRepository.findById(bookingRequestDto.getHotelId()).get())
+                    .hotel(hotel)
                     .checkIn(bookingRequestDto.getCheckIn())
                     .checkOut(bookingRequestDto.getCheckOut())
                     .bookingPrice(bookingRequestDto.getBookingPrice())
