@@ -1,5 +1,7 @@
 package com.example.hbs.controller;
 
+import com.example.hbs.DTO.AddUserDTO;
+import com.example.hbs.DTO.UserDTO;
 import com.example.hbs.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,9 +17,9 @@ public class UserController
 
     // request for registartion of new user.
     @RequestMapping(method = RequestMethod.POST,value="/user")
-    public ResponseEntity<String> addUser(@RequestBody User user)
+    public ResponseEntity<String> addUser(@RequestBody AddUserDTO addUserDto)
     {
-        return userService.addUser(user);
+        return userService.addUser(addUserDto);
     }
 
     @RequestMapping(method = RequestMethod.GET,value="/user")
@@ -27,8 +29,9 @@ public class UserController
     }
 
     @RequestMapping(method = RequestMethod.PUT,value="/user/{id}")
-    public ResponseEntity<String> updateUser(@RequestBody User user, @PathVariable Long id)
+    public ResponseEntity<String> updateUser(@RequestBody UserDTO userDto, @PathVariable Long id)
+            // replace User user with UserDTO userDto
     {
-        return userService.updateUser(id,user);
+        return userService.updateUser(id,userDto);
     }
 }
