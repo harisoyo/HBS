@@ -28,10 +28,7 @@ public class HotelController {
     @RequestMapping(method = RequestMethod.POST, value = "/hotels")
     public ResponseDto<HotelResponseDto> insertHotel(@RequestBody HotelRequestDto hotelRequestDto) {
         HotelResponseDto hotelResponseDto = hotelService.addHotel(hotelRequestDto);
-        if (hotelResponseDto != null)
-            return new ResponseDto<>(hotelResponseDto);
-        else
-            return new ResponseDto<>(null);
+        return new ResponseDto<>(hotelResponseDto);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/hotels/{id}")
@@ -43,10 +40,7 @@ public class HotelController {
     @RequestMapping(method = RequestMethod.PUT, value = "/hotels/{id}")
     public ResponseDto<HotelResponseDto> updateHotel(@RequestBody HotelResponseDto hotelResponseDto, @PathVariable Long id, @RequestParam(defaultValue = "0") Long userId) {
         HotelResponseDto hotelResponseDto1 = hotelService.updateHotel(id, hotelResponseDto, userId);
-        if (hotelResponseDto1 != null)
-            return new ResponseDto<>(hotelResponseDto1);
-        else
-            return new ResponseDto<>(null);
+        return new ResponseDto<>(hotelResponseDto1);
     }
 
 
