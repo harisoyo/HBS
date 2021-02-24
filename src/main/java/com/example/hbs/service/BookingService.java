@@ -44,14 +44,14 @@ public class BookingService {
         Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such User present"));
         Hotel hotel = hotelRepository.findById(bookingRequestDto.getHotelId()).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("No such Hotel present"));
-        Integer RequiredRooms = bookingRequestDto.getNoOfRooms();
-        if (RequiredRooms <= 0) {
+        Integer requiredRooms = bookingRequestDto.getNoOfRooms();
+        if (requiredRooms <= 0) {
             throw new HbsException("Booking with Zero or Negative Required Rooms is not possible");
         }
-        if (hotel.getAvailableRooms() < RequiredRooms) {
+        if (hotel.getAvailableRooms() < requiredRooms) {
             throw new HbsException("Number of Available Rooms are lesser than Required Rooms");
         }
-        hotel.setAvailableRooms(hotel.getAvailableRooms() - RequiredRooms);
+        hotel.setAvailableRooms(hotel.getAvailableRooms() - requiredRooms);
         hotelRepository.save(hotel);
         Booking booking = Booking.builder()
                 .user(user)
