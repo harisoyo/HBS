@@ -35,14 +35,14 @@ public class HotelController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/hotels/{id}")
-    public ResponseDto<HotelResponseDto> deleteHotel(@PathVariable Long id) {
-        HotelResponseDto hotelResponseDto = hotelService.deleteHotel(id);
+    public ResponseDto<HotelResponseDto> deleteHotel(@PathVariable Long id, @RequestParam(defaultValue = "0") Long userId) {
+        HotelResponseDto hotelResponseDto = hotelService.deleteHotel(id, userId);
         return new ResponseDto<>(hotelResponseDto);
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/hotels/{id}")
-    public ResponseDto<HotelResponseDto> updateHotel(@RequestBody HotelResponseDto hotelResponseDto, @PathVariable Long id) {
-        HotelResponseDto hotelResponseDto1 = hotelService.updateHotel(id, hotelResponseDto);
+    public ResponseDto<HotelResponseDto> updateHotel(@RequestBody HotelResponseDto hotelResponseDto, @PathVariable Long id, @RequestParam(defaultValue = "0") Long userId) {
+        HotelResponseDto hotelResponseDto1 = hotelService.updateHotel(id, hotelResponseDto, userId);
         if (hotelResponseDto1 != null)
             return new ResponseDto<>(hotelResponseDto1);
         else
