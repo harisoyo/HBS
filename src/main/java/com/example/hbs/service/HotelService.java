@@ -4,6 +4,7 @@ import com.example.hbs.dto.HotelRequestDto;
 import com.example.hbs.dto.HotelResponseDto;
 import com.example.hbs.enums.Role;
 import com.example.hbs.enums.SortBy;
+import com.example.hbs.exception.HbsException;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.HotelRepository;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HotelService {
@@ -65,19 +67,11 @@ public class HotelService {
     }
 
     public HotelResponseDto deleteHotel(Long id) {
-        if (hotelRepository.findById(id).isPresent()) {
-            User user = hotelRepository.findById(id).get().getUser();
-            if (user.getUserRole().equals(Role.HOTEL_OWNER)) {
-                Hotel hotel = hotelRepository.findById(id).get();
-                hotelRepository.deleteById(id);
-                return hotelMapper.map(hotel);
+        Hotel hotel = hotelRepository.findById(id).orElse(null);
+        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
+        hotelRepository.deleteById(id);
+        return hotelMapper.map(hotel);
 
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
     }
 
     public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto) {
