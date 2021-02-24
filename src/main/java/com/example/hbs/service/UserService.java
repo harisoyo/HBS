@@ -1,10 +1,17 @@
 package com.example.hbs.service;
 
+import com.example.hbs.dto.UserRequestDto;
+import com.example.hbs.dto.UserResponseDto;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.UserRepository;
+import com.example.hbs.service.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,17 +20,50 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addUser(User user) {
-        userRepository.save(user);
+    @Autowired
+    private UserMapper userMapper;
+
+    public UserResponseDto addUser(UserRequestDto userRequestDto) {
+        User user = User.builder()
+                .userName(userRequestDto.getUserName())
+                .userEmail(userRequestDto.getUserEmail())
+                .userContact(userRequestDto.getUserContact())
+                .userRole(userRequestDto.getUserRole())
+                .build();
+        return userMapper.map(userRepository.save(user));
     }
 
-    public List<User> findAllUser() {
-        return userRepository.findAll();
+    public List<UserResponseDto> findAllUser(Integer pageNo, Integer pageSize) {
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<User> users = userRepository.findAll(page);
+        List<User> user = users.getContent();
+        List<UserResponseDto> userResponseDtos = new ArrayList<>();
+        for (User currentUser : user) {
+            userResponseDtos.add(UserResponseDto.builder()
+                    .userName(currentUser.getUserName())
+                    .userEmail(currentUser.getUserEmail())
+                    .userContact(currentUser.getUserContact())
+                    .userRole(currentUser.getUserRole())
+                    .build());
+        }
+        return userResponseDtos;
     }
 
-    public void updateUser(Long id, User user) {
-        User temp = userRepository.findById(id).get();
-        userRepository.delete(temp);
-        userRepository.save(user);
+    public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
+        if (userRepository.findById(id).isPresent()) {
+            User user = userRepository.findById(id).get();
+            if (userRequestDto.getUserName() != null)
+                user.setUserName(userRequestDto.getUserName());
+            if (userRequestDto.getUserEmail() != null)
+                user.setUserEmail(userRequestDto.getUserEmail());
+            if (userRequestDto.getUserContact() != null)
+                user.setUserContact(userRequestDto.getUserContact());
+            if (userRequestDto.getUserRole() != null)
+                user.setUserRole(userRequestDto.getUserRole());
+            return userMapper.map(userRepository.save(user));
+        } else {
+            return null;
+        }
     }
+
 }
