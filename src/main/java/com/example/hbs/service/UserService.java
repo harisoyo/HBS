@@ -2,6 +2,7 @@ package com.example.hbs.service;
 
 import com.example.hbs.dto.UserRequestDto;
 import com.example.hbs.dto.UserResponseDto;
+import com.example.hbs.exception.HbsException;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.UserRepository;
 import com.example.hbs.service.mapper.UserMapper;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -50,20 +52,21 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
-        if (userRepository.findById(id).isPresent()) {
-            User user = userRepository.findById(id).get();
-            if (userRequestDto.getUserName() != null)
-                user.setUserName(userRequestDto.getUserName());
-            if (userRequestDto.getUserEmail() != null)
-                user.setUserEmail(userRequestDto.getUserEmail());
-            if (userRequestDto.getUserContact() != null)
-                user.setUserContact(userRequestDto.getUserContact());
-            if (userRequestDto.getUserRole() != null)
-                user.setUserRole(userRequestDto.getUserRole());
-            return userMapper.map(userRepository.save(user));
-        } else {
-            return null;
+        User user = userRepository.findById(id).orElse(null);
+        Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such user Id found"));
+        if (userRequestDto.getUserName() != null) {
+            user.setUserName(userRequestDto.getUserName());
         }
+        if (userRequestDto.getUserEmail() != null) {
+            user.setUserEmail(userRequestDto.getUserEmail());
+        }
+        if (userRequestDto.getUserContact() != null) {
+            user.setUserContact(userRequestDto.getUserContact());
+        }
+        if (userRequestDto.getUserRole() != null) {
+            user.setUserRole(userRequestDto.getUserRole());
+        }
+        return userMapper.map(userRepository.save(user));
     }
 
 }
