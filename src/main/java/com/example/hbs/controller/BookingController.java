@@ -7,6 +7,8 @@ import com.example.hbs.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 public class BookingController {
@@ -17,6 +19,11 @@ public class BookingController {
     public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId, @RequestParam(required = false) Long userId) {
         BookingResponseDto bookingResponseDto = bookingService.viewBooking(bookingId, userId);
         return new ResponseDto<>(bookingResponseDto);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hotel/booking/{hotelId}")
+    public List<BookingResponseDto> viewAllBookingsOfHotel(@PathVariable Long hotelId, @RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+        return bookingService.findAllBookingsOfHotel(hotelId, pageNo, pageSize);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/user/booking")

@@ -9,10 +9,15 @@ import com.example.hbs.model.User;
 import com.example.hbs.repository.BookingRepository;
 import com.example.hbs.repository.HotelRepository;
 import com.example.hbs.repository.UserRepository;
+import com.example.hbs.service.mapper.BookingListMapper;
 import com.example.hbs.service.mapper.BookingMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,6 +34,9 @@ public class BookingService {
     @Autowired
     BookingMapper bookingMapper;
 
+    @Autowired
+    BookingListMapper bookingListMapper;
+
     private void CheckIfUserIdIsCorrect(Long userId){
         if(userId == null){
             throw new HbsException("Missing userId Params");
@@ -43,10 +51,20 @@ public class BookingService {
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         Optional.ofNullable(booking).orElseThrow(() -> new HbsException("No such booking Id found"));
         User user = booking.getUser();
-        if(!user.getId().equals(userId)){
+        if (!user.getId().equals(userId)) {
             throw new HbsException("This booking is not owned by this User");
         }
         return bookingMapper.map(booking);
+    }
+
+
+    public List<BookingResponseDto> findAllBookingsOfHotel(Long hotelId, Integer pageNo, Integer pageSize) {
+        Hotel hotel = hotelRepository.findById(hotelId).orElse(null);
+        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("No hotel found with this Hotel_id"));
+        Pageable page = PageRequest.of(pageNo - 1, pageSize);
+        Page<Booking> bookings = bookingRepository.findAllBookingofHotel(hotelId, page);
+        List<Booking> booking = bookings.getContent();
+        return bookingListMapper.map(booking);
     }
 
     public BookingResponseDto addBooking(BookingRequestDto bookingRequestDto) {
