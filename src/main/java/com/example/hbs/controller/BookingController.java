@@ -14,7 +14,7 @@ public class BookingController {
     BookingService bookingService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/user/booking/{bookingId}")
-    public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId, @RequestParam(defaultValue = "0") Long userId) {
+    public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId, @RequestParam(required = false) Long userId) {
         BookingResponseDto bookingResponseDto = bookingService.viewBooking(bookingId, userId);
         return new ResponseDto<>(bookingResponseDto);
     }
@@ -26,7 +26,7 @@ public class BookingController {
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/booking/{id}")
-    public ResponseDto<BookingResponseDto> deleteBooking(@PathVariable Long id, @RequestParam(defaultValue = "0") Long userId) {
+    public ResponseDto<BookingResponseDto> deleteBooking(@PathVariable Long id, @RequestParam(required = false) Long userId) {
         BookingResponseDto bookingResponseDto = bookingService.deleteBooking(id, userId);
         return new ResponseDto<>(bookingResponseDto);
     }
