@@ -35,18 +35,27 @@ public class HotelService {
     @Autowired
     private HotelListMapper hotelListMapper;
 
-    public List<HotelResponseDto> findAllHotels(Integer pageNo, SortBy sortBy, Integer pageSize) {
+    public List<HotelResponseDto> findAllHotels(Integer pageNo, SortBy sortBy, Integer pageSize, Long userId) {
         String sort = "Id";
-        if (sortBy.equals(SortBy.PRICE))
+        if (sortBy.equals(SortBy.PRICE)) {
             sort = "priceOfRoom";
-        if (sortBy.equals(SortBy.ROOM))
+        }
+        if (sortBy.equals(SortBy.ROOM)) {
             sort = "noOfRooms";
+        }
         Pageable page;
-        if (sort.equals("Id"))
+        if (sort.equals("Id")) {
             page = PageRequest.of(pageNo - 1, pageSize);
-        else
+        }
+        else {
             page = PageRequest.of(pageNo - 1, pageSize, Sort.by(sort));
-        Page<Hotel> hotels = hotelRepository.findAll(page);
+        }
+        Page<Hotel> hotels;
+        if (userId == 0) {
+            hotels = hotelRepository.findAll(page);
+        } else {
+            hotels = hotelRepository.findByUserId(userId, page);
+        }
         List<Hotel> hotel = hotels.getContent();
         return hotelListMapper.map(hotel);
     }
@@ -86,10 +95,12 @@ public class HotelService {
         if (!user.getId().equals(userId)) {
             throw new HbsException("You are not the owner of this hotel");
         }
-        if (hotelResponseDto.getAvailableRooms() != null)
+        if (hotelResponseDto.getAvailableRooms() != null) {
             hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
-        if (hotelResponseDto.getPriceOfRoom() != null)
+        }
+        if (hotelResponseDto.getPriceOfRoom() != null) {
             hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
+        }
         return hotelMapper.map(hotelRepository.save(hotel));
     }
 

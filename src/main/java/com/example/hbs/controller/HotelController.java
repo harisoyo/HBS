@@ -21,8 +21,8 @@ public class HotelController {
     }
 
     @RequestMapping("/hotels")
-    public List<HotelResponseDto> showAllHotels(@RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "NONE") SortBy sortBy, @RequestParam(defaultValue = "10") Integer pageSize) {
-        return hotelService.findAllHotels(pageNo, sortBy, pageSize);
+    public List<HotelResponseDto> showAllHotels(@RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "NONE") SortBy sortBy, @RequestParam(defaultValue = "10") Integer pageSize, @RequestParam(defaultValue = "0") Long userId) {
+        return hotelService.findAllHotels(pageNo, sortBy, pageSize, userId);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/hotels")
