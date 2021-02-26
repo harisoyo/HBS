@@ -101,6 +101,9 @@ public class BookingService {
         if (!user.getId().equals(userId)) {
             throw new HbsException("You are not allowed to delete this booking");
         }
+        Hotel hotel = booking.getHotel();
+        hotel.setAvailableRooms(hotel.getAvailableRooms() + booking.getNoOfRooms());
+        hotelRepository.save(hotel);
         bookingRepository.deleteById(id);
         return bookingMapper.map(booking);
     }
