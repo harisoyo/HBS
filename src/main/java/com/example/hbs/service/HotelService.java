@@ -4,6 +4,7 @@ import com.example.hbs.dto.HotelRequestDto;
 import com.example.hbs.dto.HotelResponseDto;
 import com.example.hbs.enums.Role;
 import com.example.hbs.enums.SortBy;
+import com.example.hbs.exception.HbsException;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.HotelRepository;
@@ -18,6 +19,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class HotelService {
@@ -33,69 +35,85 @@ public class HotelService {
     @Autowired
     private HotelListMapper hotelListMapper;
 
-    public List<HotelResponseDto> findAllHotels(Integer pageNo, SortBy sortBy, Integer pageSize) {
+    private void CheckIfUserIdIsCorrect(Long userId) {
+        if (userId == null) {
+            throw new HbsException("Missing userId Params");
+        }
+        if (userId <= 0) {
+            throw new HbsException("Zero or negative userId is not allowed");
+        }
+    }
+
+    private void CheckIfUserIsOwner(Hotel hotel, Long userId) {
+        User user = hotel.getUser();
+        if (!user.getId().equals(userId)) {
+            throw new HbsException("You are not the owner of this hotel");
+        }
+    }
+
+    public List<HotelResponseDto> findAllHotels(Integer pageNo, SortBy sortBy, Integer pageSize, Long userId) {
         String sort = "Id";
-        if (sortBy.equals(SortBy.PRICE))
+        if (sortBy.equals(SortBy.PRICE)) {
             sort = "priceOfRoom";
-        if (sortBy.equals(SortBy.ROOM))
+        }
+        if (sortBy.equals(SortBy.ROOM)) {
             sort = "noOfRooms";
+        }
         Pageable page;
-        if (sort.equals("Id"))
+        if (sort.equals("Id")) {
             page = PageRequest.of(pageNo - 1, pageSize);
-        else
+        }
+        else {
             page = PageRequest.of(pageNo - 1, pageSize, Sort.by(sort));
-        Page<Hotel> hotels = hotelRepository.findAll(page);
+        }
+        Page<Hotel> hotels;
+        if (userId == null) {
+            hotels = hotelRepository.findAll(page);
+        } else {
+            hotels = hotelRepository.findByUserId(userId, page);
+        }
         List<Hotel> hotel = hotels.getContent();
         return hotelListMapper.map(hotel);
     }
 
     public HotelResponseDto addHotel(HotelRequestDto hotelRequestDto) {
-        if (userRepository.findById(hotelRequestDto.getUserId()).isPresent() && userRepository.findById(hotelRequestDto.getUserId()).get().getUserRole().equals(Role.HOTEL_OWNER)) {
-            Hotel hotel = Hotel.builder().user(userRepository.findById(hotelRequestDto.getUserId()).get()).
-                    hotelName(hotelRequestDto.getHotelName()).
-                    hotelLocation(hotelRequestDto.getHotelLocation()).
-                    availableRooms(hotelRequestDto.getAvailableRooms()).
-                    noOfRooms(hotelRequestDto.getNoOfRooms()).
-                    priceOfRoom(hotelRequestDto.getPriceOfRoom()).
-                    build();
-            return hotelMapper.map(hotelRepository.save(hotel));
-        } else {
-            return null;
+        User user = userRepository.findById(hotelRequestDto.getUserId()).orElse(null);
+        Optional.ofNullable(user).orElseThrow(() -> new HbsException("No user found"));
+        if (user.getUserRole().equals(Role.CUSTOMER)) {
+            throw new HbsException("Customers are not allowed to add Hotels");
         }
+        Hotel hotel = Hotel.builder().user(user).
+                hotelName(hotelRequestDto.getHotelName()).
+                hotelLocation(hotelRequestDto.getHotelLocation()).
+                availableRooms(hotelRequestDto.getAvailableRooms()).
+                noOfRooms(hotelRequestDto.getNoOfRooms()).
+                priceOfRoom(hotelRequestDto.getPriceOfRoom()).
+                build();
+        return hotelMapper.map(hotelRepository.save(hotel));
     }
 
-    public HotelResponseDto deleteHotel(Long id) {
-        if (hotelRepository.findById(id).isPresent()) {
-            User user = hotelRepository.findById(id).get().getUser();
-            if (user.getUserRole().equals(Role.HOTEL_OWNER)) {
-                Hotel hotel = hotelRepository.findById(id).get();
-                hotelRepository.deleteById(id);
-                return hotelMapper.map(hotel);
+    public HotelResponseDto deleteHotel(Long id, Long userId) {
+        CheckIfUserIdIsCorrect(userId);
+        Hotel hotel = hotelRepository.findById(id).orElse(null);
+        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
+        CheckIfUserIsOwner(hotel, userId);
+        hotelRepository.deleteById(id);
+        return hotelMapper.map(hotel);
 
-            } else {
-                return null;
-            }
-        } else {
-            return null;
-        }
     }
 
-    public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto) {
-        if (hotelRepository.findById(id).isPresent()) {
-            User user = hotelRepository.findById(id).get().getUser();
-            if (user.getUserRole().equals(Role.HOTEL_OWNER)) {
-                Hotel hotel = hotelRepository.getOne(id);
-                if (hotelResponseDto.getAvailableRooms() != null)
-                    hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
-                if (hotelResponseDto.getPriceOfRoom() != null)
-                    hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
-                return hotelMapper.map(hotelRepository.save(hotel));
-            } else {
-                return null;
-            }
-        } else {
-            return null;
+    public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto, Long userId) {
+        CheckIfUserIdIsCorrect(userId);
+        Hotel hotel = hotelRepository.findById(id).orElse(null);
+        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
+        CheckIfUserIsOwner(hotel, userId);
+        if (hotelResponseDto.getAvailableRooms() != null) {
+            hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
         }
+        if (hotelResponseDto.getPriceOfRoom() != null) {
+            hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
+        }
+        return hotelMapper.map(hotelRepository.save(hotel));
     }
 
 }

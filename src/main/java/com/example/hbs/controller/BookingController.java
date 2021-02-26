@@ -7,6 +7,8 @@ import com.example.hbs.service.BookingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 
 @RestController
 public class BookingController {
@@ -14,29 +16,25 @@ public class BookingController {
     BookingService bookingService;
 
     @RequestMapping(method = RequestMethod.GET, value = "/user/booking/{bookingId}")
-    public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId) {
-        BookingResponseDto bookingResponseDto = bookingService.viewBooking(bookingId);
-        if (bookingResponseDto != null)
-            return new ResponseDto<>(bookingResponseDto);
-        else
-            return new ResponseDto<>(null);
+    public ResponseDto<BookingResponseDto> viewBooking(@PathVariable Long bookingId, @RequestParam(required = false) Long userId) {
+        BookingResponseDto bookingResponseDto = bookingService.viewBooking(bookingId, userId);
+        return new ResponseDto<>(bookingResponseDto);
+    }
+
+    @RequestMapping(method = RequestMethod.GET, value = "/hotel/booking/{hotelId}")
+    public List<BookingResponseDto> viewAllBookingsOfHotel(@PathVariable Long hotelId, @RequestParam(defaultValue = "1") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
+        return bookingService.findAllBookingsOfHotel(hotelId, pageNo, pageSize);
     }
 
     @RequestMapping(method = RequestMethod.POST, value = "/user/booking")
     public ResponseDto<BookingResponseDto> addBooking(@RequestBody BookingRequestDto bookingRequestDto) {
         BookingResponseDto bookingResponseDto = bookingService.addBooking(bookingRequestDto);
-        if (bookingResponseDto != null)
-            return new ResponseDto<>(bookingResponseDto);
-        else
-            return new ResponseDto<>(null);
+        return new ResponseDto<>(bookingResponseDto);
     }
 
     @RequestMapping(method = RequestMethod.DELETE, value = "/user/booking/{id}")
-    public ResponseDto<BookingResponseDto> deleteBooking(@PathVariable Long id) {
-        BookingResponseDto bookingResponseDto = bookingService.deleteBooking(id);
-        if (bookingResponseDto != null)
-            return new ResponseDto<>(bookingResponseDto);
-        else
-            return new ResponseDto<>(null);
+    public ResponseDto<BookingResponseDto> deleteBooking(@PathVariable Long id, @RequestParam(required = false) Long userId) {
+        BookingResponseDto bookingResponseDto = bookingService.deleteBooking(id, userId);
+        return new ResponseDto<>(bookingResponseDto);
     }
 }
