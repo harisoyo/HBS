@@ -70,6 +70,7 @@ public class HotelService {
         if (userId == null) {
             hotels = hotelRepository.findAll(page);
         } else {
+            CheckIfUserIdIsCorrect(userId);
             hotels = hotelRepository.findByUserId(userId, page);
         }
         List<Hotel> hotel = hotels.getContent();
