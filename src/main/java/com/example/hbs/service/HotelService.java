@@ -35,7 +35,7 @@ public class HotelService {
     @Autowired
     private HotelListMapper hotelListMapper;
 
-    private void CheckIfUserIdIsCorrect(Long userId) {
+    private void checkIfUserIdIsCorrect(Long userId) {
         if (userId == null) {
             throw new HbsException("Missing userId Params");
         }
@@ -44,7 +44,7 @@ public class HotelService {
         }
     }
 
-    private void CheckIfUserIsOwner(Hotel hotel, Long userId) {
+    private void checkIfUserIsOwner(Hotel hotel, Long userId) {
         User user = hotel.getUser();
         if (!user.getId().equals(userId)) {
             throw new HbsException("You are not the owner of this hotel");
@@ -70,7 +70,7 @@ public class HotelService {
         if (userId == null) {
             hotels = hotelRepository.findAll(page);
         } else {
-            CheckIfUserIdIsCorrect(userId);
+            checkIfUserIdIsCorrect(userId);
             hotels = hotelRepository.findByUserId(userId, page);
         }
         List<Hotel> hotel = hotels.getContent();
@@ -94,20 +94,20 @@ public class HotelService {
     }
 
     public HotelResponseDto deleteHotel(Long id, Long userId) {
-        CheckIfUserIdIsCorrect(userId);
+        checkIfUserIdIsCorrect(userId);
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
-        CheckIfUserIsOwner(hotel, userId);
+        checkIfUserIsOwner(hotel, userId);
         hotelRepository.deleteById(id);
         return hotelMapper.map(hotel);
 
     }
 
     public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto, Long userId) {
-        CheckIfUserIdIsCorrect(userId);
+        checkIfUserIdIsCorrect(userId);
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
-        CheckIfUserIsOwner(hotel, userId);
+        checkIfUserIsOwner(hotel, userId);
         if (hotelResponseDto.getAvailableRooms() != null) {
             hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
         }
