@@ -26,6 +26,20 @@ public class UserService {
     private UserMapper userMapper;
 
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
+
+        if (userRequestDto.getUserName() == null) {
+            throw new HbsException("UserName is missing");
+        }
+        if (userRequestDto.getUserEmail() == null) {
+            throw new HbsException("User Email is missing");
+        }
+        if (userRequestDto.getUserContact() == null) {
+            throw new HbsException("User contact is missing");
+        }
+        if (userRequestDto.getUserRole() == null) {
+            throw new HbsException("User role is missing");
+        }
+
         User user = User.builder()
                 .userName(userRequestDto.getUserName())
                 .userEmail(userRequestDto.getUserEmail())
@@ -54,15 +68,25 @@ public class UserService {
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id).orElse(null);
         Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such user Id found"));
-        if (userRequestDto.getUserName() != null) {
-            user.setUserName(userRequestDto.getUserName());
+
+        if (userRequestDto.getUserRole() != null && !userRequestDto.getUserRole().equals(user.getUserRole())) {
+            throw new HbsException("User role cannot be different");
         }
-        if (userRequestDto.getUserEmail() != null) {
-            user.setUserEmail(userRequestDto.getUserEmail());
+        if (userRequestDto.getUserName() == null) {
+            throw new HbsException("UserName is missing");
         }
-        if (userRequestDto.getUserContact() != null) {
-            user.setUserContact(userRequestDto.getUserContact());
+        user.setUserName(userRequestDto.getUserName());
+
+        if (userRequestDto.getUserEmail() == null) {
+            throw new HbsException("User Email is missing");
         }
+        user.setUserEmail(userRequestDto.getUserEmail());
+
+        if (userRequestDto.getUserContact() == null) {
+            throw new HbsException("User contact is missing");
+        }
+        user.setUserContact(userRequestDto.getUserContact());
+
         if (userRequestDto.getUserRole() != null) {
             user.setUserRole(userRequestDto.getUserRole());
         }
