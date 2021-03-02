@@ -37,7 +37,7 @@ public class BookingService {
     @Autowired
     BookingListMapper bookingListMapper;
 
-    private void CheckIfUserIdIsCorrect(Long userId){
+    private void checkIfUserIdIsCorrect(Long userId){
         if(userId == null){
             throw new HbsException("Missing userId Params");
         }
@@ -47,7 +47,7 @@ public class BookingService {
     }
 
     public BookingResponseDto viewBooking(Long bookingId, Long userId) {
-        CheckIfUserIdIsCorrect(userId);
+        checkIfUserIdIsCorrect(userId);
         Booking booking = bookingRepository.findById(bookingId).orElse(null);
         Optional.ofNullable(booking).orElseThrow(() -> new HbsException("No such booking Id found"));
         User user = booking.getUser();
@@ -94,13 +94,16 @@ public class BookingService {
     }
 
     public BookingResponseDto deleteBooking(Long id, Long userId) {
-        CheckIfUserIdIsCorrect(userId);
+        checkIfUserIdIsCorrect(userId);
         Booking booking = bookingRepository.findById(id).orElse(null);
         Optional.ofNullable(booking).orElseThrow(() -> new HbsException("No such booking Id found"));
         User user = booking.getUser();
         if (!user.getId().equals(userId)) {
             throw new HbsException("You are not allowed to delete this booking");
         }
+        Hotel hotel = booking.getHotel();
+        hotel.setAvailableRooms(hotel.getAvailableRooms() + booking.getNoOfRooms());
+        hotelRepository.save(hotel);
         bookingRepository.deleteById(id);
         return bookingMapper.map(booking);
     }
