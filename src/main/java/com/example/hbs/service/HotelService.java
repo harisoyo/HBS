@@ -5,7 +5,6 @@ import com.example.hbs.dto.HotelResponseDto;
 import com.example.hbs.enums.Role;
 import com.example.hbs.enums.SortBy;
 import com.example.hbs.exception.HbsException;
-import com.example.hbs.model.Booking;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
 import com.example.hbs.repository.BookingRepository;
