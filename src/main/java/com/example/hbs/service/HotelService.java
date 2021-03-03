@@ -5,8 +5,10 @@ import com.example.hbs.dto.HotelResponseDto;
 import com.example.hbs.enums.Role;
 import com.example.hbs.enums.SortBy;
 import com.example.hbs.exception.HbsException;
+import com.example.hbs.model.Booking;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
+import com.example.hbs.repository.BookingRepository;
 import com.example.hbs.repository.HotelRepository;
 import com.example.hbs.repository.UserRepository;
 import com.example.hbs.service.mapper.HotelListMapper;
@@ -28,6 +30,9 @@ public class HotelService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     @Autowired
     private HotelMapper hotelMapper;
@@ -98,6 +103,11 @@ public class HotelService {
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
         checkIfUserIsOwner(hotel, userId);
+        Pageable page = PageRequest.of(0, 10);
+        List<Booking> booking = bookingRepository.findAllBookingofHotel(id, page).getContent();
+        if(!booking.isEmpty()){
+            throw new HbsException("Hotel with bookings greater than 0 can not be deleted");
+        }
         hotelRepository.deleteById(id);
         return hotelMapper.map(hotel);
 
@@ -109,7 +119,9 @@ public class HotelService {
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
         checkIfUserIsOwner(hotel, userId);
         if (hotelResponseDto.getAvailableRooms() != null) {
+            Integer roomsAdded = hotelResponseDto.getAvailableRooms() - hotel.getAvailableRooms();
             hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
+            hotel.setNoOfRooms(hotel.getNoOfRooms() + roomsAdded);
         }
         if (hotelResponseDto.getPriceOfRoom() != null) {
             hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
