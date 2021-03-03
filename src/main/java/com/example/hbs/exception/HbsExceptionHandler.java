@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
-public class ExceptionHandler {
+public class HbsExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler({HbsException.class})
     public ResponseEntity<Object> handleException(

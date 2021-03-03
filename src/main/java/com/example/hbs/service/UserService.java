@@ -27,16 +27,17 @@ public class UserService {
 
     public UserResponseDto addUser(UserRequestDto userRequestDto) {
 
-        if (userRequestDto.getUserName() == null) {
+        if (userRequestDto.getUserName() == null || userRequestDto.getUserName().equals("")) {
             throw new HbsException("UserName is missing");
         }
-        if (userRequestDto.getUserEmail() == null) {
+
+        if (userRequestDto.getUserEmail() == null || userRequestDto.getUserEmail().equals("")) {
             throw new HbsException("User Email is missing");
         }
-        if (userRequestDto.getUserContact() == null) {
+        if (userRequestDto.getUserContact() == null || userRequestDto.getUserContact().equals("")) {
             throw new HbsException("User contact is missing");
         }
-        if (userRequestDto.getUserRole() == null) {
+        if (userRequestDto.getUserRole() == null ) {
             throw new HbsException("User role is missing");
         }
 
@@ -66,8 +67,8 @@ public class UserService {
     }
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
-        User user = userRepository.findById(id).orElse(null);
-        Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such user Id found"));
+        User user = userRepository.findById(id).orElseThrow(() -> new HbsException("No such user id found"));
+        //Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such user Id found"));
         if (userRequestDto.getUserName() != null) {
             user.setUserName(userRequestDto.getUserName());
         }
