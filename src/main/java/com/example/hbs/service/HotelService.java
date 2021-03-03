@@ -98,29 +98,11 @@ public class HotelService {
         return hotelMapper.map(hotelRepository.save(hotel));
     }
 
-    public HotelResponseDto deleteHotel(Long id, Long userId) {
-        checkIfUserIdIsCorrect(userId);
-        Hotel hotel = hotelRepository.findById(id).orElse(null);
-        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
-        checkIfUserIsOwner(hotel, userId);
-        Pageable page = PageRequest.of(0, 10);
-        List<Booking> booking = bookingRepository.findAllBookingofHotel(id, page).getContent();
-        if(!booking.isEmpty()){
-            throw new HbsException("Hotel with bookings greater than 0 can not be deleted");
-        }
-        hotelRepository.deleteById(id);
-        return hotelMapper.map(hotel);
-
-    }
-
     public HotelResponseDto updateHotel(Long id, HotelRequestDto hotelRequestDto, Long userId) {
         checkIfUserIdIsCorrect(userId);
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
         checkIfUserIsOwner(hotel, userId);
-        if (hotelRequestDto.getNoOfRooms() != null) {
-            hotel.setNoOfRooms(hotel.getNoOfRooms());
-        }
         if (hotelRequestDto.getPriceOfRoom() != null) {
             hotel.setPriceOfRoom(hotelRequestDto.getPriceOfRoom());
         }
