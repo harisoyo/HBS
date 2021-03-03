@@ -38,8 +38,8 @@ public class HotelController {
     }
 
     @RequestMapping(method = RequestMethod.PUT, value = "/hotels/{id}")
-    public ResponseDto<HotelResponseDto> updateHotel(@RequestBody HotelResponseDto hotelResponseDto, @PathVariable Long id, @RequestParam(required = false) Long userId) {
-        HotelResponseDto hotelResponseDto1 = hotelService.updateHotel(id, hotelResponseDto, userId);
+    public ResponseDto<HotelResponseDto> updateHotel(@RequestBody HotelRequestDto hotelRequestDto, @PathVariable Long id, @RequestParam(required = false) Long userId) {
+        HotelResponseDto hotelResponseDto1 = hotelService.updateHotel(id, hotelRequestDto, userId);
         return new ResponseDto<>(hotelResponseDto1);
     }
 

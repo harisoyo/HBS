@@ -113,18 +113,19 @@ public class HotelService {
 
     }
 
-    public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto, Long userId) {
+    public HotelResponseDto updateHotel(Long id, HotelRequestDto hotelRequestDto, Long userId) {
         checkIfUserIdIsCorrect(userId);
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
         checkIfUserIsOwner(hotel, userId);
-        if (hotelResponseDto.getAvailableRooms() != null) {
-            Integer roomsAdded = hotelResponseDto.getAvailableRooms() - hotel.getAvailableRooms();
-            hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
-            hotel.setNoOfRooms(hotel.getNoOfRooms() + roomsAdded);
+        if (hotelRequestDto.getNoOfRooms() != null) {
+            hotel.setNoOfRooms(hotel.getNoOfRooms());
         }
-        if (hotelResponseDto.getPriceOfRoom() != null) {
-            hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
+        if (hotelRequestDto.getPriceOfRoom() != null) {
+            hotel.setPriceOfRoom(hotelRequestDto.getPriceOfRoom());
+        }
+        if (hotelRequestDto.getHotelName() != null) {
+            hotel.setHotelName(hotelRequestDto.getHotelName());
         }
         return hotelMapper.map(hotelRepository.save(hotel));
     }
