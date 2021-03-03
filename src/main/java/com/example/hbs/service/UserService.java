@@ -68,7 +68,6 @@ public class UserService {
 
     public UserResponseDto updateUser(Long id, UserRequestDto userRequestDto) {
         User user = userRepository.findById(id).orElseThrow(() -> new HbsException("No such user id found"));
-        //Optional.ofNullable(user).orElseThrow(() -> new HbsException("No such user Id found"));
         if (userRequestDto.getUserName() != null) {
             user.setUserName(userRequestDto.getUserName());
         }
@@ -83,5 +82,4 @@ public class UserService {
         }
         return userMapper.map(userRepository.save(user));
     }
-
 }
