@@ -12,7 +12,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingResponseDto {
-    private Long Id;
+    private Long bookingId;
 
     private LocalDate checkIn;
 

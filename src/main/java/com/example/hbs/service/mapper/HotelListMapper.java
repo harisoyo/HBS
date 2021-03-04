@@ -15,7 +15,7 @@ public class HotelListMapper implements IMapper<List<Hotel>, List<HotelResponseD
         List<HotelResponseDto> hotelResponseDtos = new ArrayList<>();
         for (Hotel hotel : hotels) {
             HotelResponseDto responseDto = HotelResponseDto.builder().
-                    Id(hotel.getId()).
+                    hotelId(hotel.getId()).
                     hotelName(hotel.getHotelName()).
                     hotelLocation(hotel.getHotelLocation()).
                     availableRooms(hotel.getAvailableRooms()).
