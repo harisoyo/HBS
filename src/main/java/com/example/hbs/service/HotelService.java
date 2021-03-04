@@ -7,6 +7,7 @@ import com.example.hbs.enums.SortBy;
 import com.example.hbs.exception.HbsException;
 import com.example.hbs.model.Hotel;
 import com.example.hbs.model.User;
+import com.example.hbs.repository.BookingRepository;
 import com.example.hbs.repository.HotelRepository;
 import com.example.hbs.repository.UserRepository;
 import com.example.hbs.service.mapper.HotelListMapper;
@@ -28,6 +29,9 @@ public class HotelService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BookingRepository bookingRepository;
 
     @Autowired
     private HotelMapper hotelMapper;
@@ -93,26 +97,16 @@ public class HotelService {
         return hotelMapper.map(hotelRepository.save(hotel));
     }
 
-    public HotelResponseDto deleteHotel(Long id, Long userId) {
+    public HotelResponseDto updateHotel(Long id, HotelRequestDto hotelRequestDto, Long userId) {
         checkIfUserIdIsCorrect(userId);
         Hotel hotel = hotelRepository.findById(id).orElse(null);
         Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
         checkIfUserIsOwner(hotel, userId);
-        hotelRepository.deleteById(id);
-        return hotelMapper.map(hotel);
-
-    }
-
-    public HotelResponseDto updateHotel(Long id, HotelResponseDto hotelResponseDto, Long userId) {
-        checkIfUserIdIsCorrect(userId);
-        Hotel hotel = hotelRepository.findById(id).orElse(null);
-        Optional.ofNullable(hotel).orElseThrow(() -> new HbsException("Hotel not found"));
-        checkIfUserIsOwner(hotel, userId);
-        if (hotelResponseDto.getAvailableRooms() != null) {
-            hotel.setAvailableRooms(hotelResponseDto.getAvailableRooms());
+        if (hotelRequestDto.getPriceOfRoom() != null) {
+            hotel.setPriceOfRoom(hotelRequestDto.getPriceOfRoom());
         }
-        if (hotelResponseDto.getPriceOfRoom() != null) {
-            hotel.setPriceOfRoom(hotelResponseDto.getPriceOfRoom());
+        if (hotelRequestDto.getHotelName() != null) {
+            hotel.setHotelName(hotelRequestDto.getHotelName());
         }
         return hotelMapper.map(hotelRepository.save(hotel));
     }
