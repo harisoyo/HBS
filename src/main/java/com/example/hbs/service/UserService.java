@@ -57,6 +57,7 @@ public class UserService {
         List<UserResponseDto> userResponseDtos = new ArrayList<>();
         for (User currentUser : user) {
             userResponseDtos.add(UserResponseDto.builder()
+                    .Id(currentUser.getId())
                     .userName(currentUser.getUserName())
                     .userEmail(currentUser.getUserEmail())
                     .userContact(currentUser.getUserContact())

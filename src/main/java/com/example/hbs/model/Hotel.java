@@ -27,7 +27,7 @@ public class Hotel {
     @Column(nullable = false, name = "id")
     private Long Id;
 
-    @Column(nullable = false, name = "hotel_name", unique = true)
+    @Column(nullable = false, name = "hotel_name")
     private String hotelName;
 
     @Column(nullable = false, name = "hotel_location")

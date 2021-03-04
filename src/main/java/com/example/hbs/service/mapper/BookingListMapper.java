@@ -15,6 +15,7 @@ public class BookingListMapper implements IMapper<List<Booking>, List<BookingRes
         List<BookingResponseDto> bookingResponseDtos = new ArrayList<>();
         for (Booking booking : bookings) {
             BookingResponseDto responseDto = BookingResponseDto.builder()
+                    .Id(booking.getId())
                     .checkIn(booking.getCheckIn())
                     .checkOut(booking.getCheckOut())
                     .noOfRooms(booking.getNoOfRooms())
