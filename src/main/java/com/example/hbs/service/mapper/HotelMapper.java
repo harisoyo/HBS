@@ -10,6 +10,7 @@ public class HotelMapper implements IMapper<Hotel, HotelResponseDto> {
     @Override
     public HotelResponseDto map(Hotel hotel) {
         return HotelResponseDto.builder()
+                .hotelId(hotel.getId())
                 .hotelName(hotel.getHotelName())
                 .hotelLocation(hotel.getHotelLocation())
                 .availableRooms(hotel.getAvailableRooms())

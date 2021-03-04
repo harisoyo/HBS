@@ -8,6 +8,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class HotelResponseDto {
+    private Long hotelId;
+
     private String hotelName;
 
     private String hotelLocation;

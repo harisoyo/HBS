@@ -10,6 +10,7 @@ public class UserMapper implements IMapper<User, UserResponseDto> {
     @Override
     public UserResponseDto map(User user){
         return UserResponseDto.builder()
+                .userId(user.getId())
                 .userName(user.getUserName())
                 .userEmail(user.getUserEmail())
                 .userContact(user.getUserContact())

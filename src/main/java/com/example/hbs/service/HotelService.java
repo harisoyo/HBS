@@ -61,7 +61,7 @@ public class HotelService {
             sort = "priceOfRoom";
         }
         if (sortBy.equals(SortBy.ROOM)) {
-            sort = "noOfRooms";
+            sort = "availableRooms";
         }
         Pageable page;
         if (sort.equals("Id")) {
@@ -105,8 +105,13 @@ public class HotelService {
         if (hotelRequestDto.getPriceOfRoom() != null) {
             hotel.setPriceOfRoom(hotelRequestDto.getPriceOfRoom());
         }
-        if (hotelRequestDto.getHotelName() != null) {
-            hotel.setHotelName(hotelRequestDto.getHotelName());
+        if (hotelRequestDto.getNoOfRooms() != null) {
+            Integer differenceInRooms = hotelRequestDto.getNoOfRooms() - hotel.getNoOfRooms();
+            if (hotel.getAvailableRooms() + differenceInRooms < 0) {
+                throw new HbsException("Not possible as Available Rooms can't be less than 0");
+            }
+            hotel.setNoOfRooms(hotelRequestDto.getNoOfRooms());
+            hotel.setAvailableRooms(hotel.getAvailableRooms() + differenceInRooms);
         }
         return hotelMapper.map(hotelRepository.save(hotel));
     }

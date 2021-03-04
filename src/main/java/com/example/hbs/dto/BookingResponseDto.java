@@ -12,6 +12,8 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookingResponseDto {
+    private Long bookingId;
+
     private LocalDate checkIn;
 
     private LocalDate checkOut;
